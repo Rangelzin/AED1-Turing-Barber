@@ -1,0 +1,23 @@
+#Pasta de build do CMake
+
+/build/
+/bin/
+
+# O executável final (caso ele vá para a raiz)
+
+*.exe
+
+# Arquivos de objeto compilados
+
+*.o
+
+#Arquivos de cache e internos do CMake
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+#Pasta de configurações do usuário do VSCode
+
+.vscode/
