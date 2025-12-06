@@ -14,7 +14,9 @@ void menuGerenciarBarbeiros(){
         printf("======================================\n");
         
         printf("  [1] Adicionar novo barbeiro\n");
-    
+        
+        printf("  [2] Listar barbeiros\n");
+
         printf("  [0] Voltar / Logout\n");
         printf("======================================\n");
 
@@ -27,6 +29,12 @@ void menuGerenciarBarbeiros(){
                 adicionarBarbeiro();
                 pausarTela();
                 break;
+
+            case 2:
+                listarBarbeiros();
+                pausarTela();
+                break;
+
             case 0:
                 break;
             default:    
@@ -90,3 +98,24 @@ void adicionarBarbeiro(){
     sistema.qtdBarbeiros++;
 }
 
+void listarBarbeiros(){
+
+    if(sistema.listaBarbeiros == NULL){
+        printf("Não há barbeiros cadastrados !");
+        return;
+    }
+
+    limparTela();
+    printf("======================================\n");
+    printf("          LISTA DE BARBEIROS          \n");
+    printf("======================================\n");
+
+    NoBarbeiro* temp = sistema.listaBarbeiros;
+
+    while (temp != NULL){
+        printf("\nBarbeiro %d\n", temp->id);
+        printf("Nome: %s\n", temp->nome);
+        printf("Email: %s\n", temp->email);
+        temp = temp->proximo;
+    }
+}

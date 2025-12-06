@@ -5,4 +5,6 @@ void adicionarBarbeiro();
 
 void menuGerenciarBarbeiros();
 
+void listarBarbeiros();
+
 #endif
