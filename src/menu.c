@@ -45,8 +45,7 @@ void exibirMenuBarbeiro() {
         switch (opcao)
         {
         case 1:
-            adicionarBarbeiro();//Create
-            printf("\n[TODO] Implementar CRUD de Barbeiros aqui.\n");
+            menuGerenciarBarbeiros();
             pausarTela();
             break;
         case 2:

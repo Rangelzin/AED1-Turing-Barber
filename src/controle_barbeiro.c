@@ -1,6 +1,92 @@
-#ifndef CONTROLE_BARBEIRO_H
-#define CONTROLE_BARBEIRO_H
+#include <stdio.h>
+#include <stdlib.h>
+#include "contexto.h"
+#include "utils.h"
+#include "controle_barbeiro.h"
 
-void adicionarBarbeiro();
+void menuGerenciarBarbeiros(){
+    int opcao;
+    
+    do {
+        limparTela();
+        printf("======================================\n");
+        printf("     GERENCIAR EQUIPE (BARBEIROS)     \n");
+        printf("======================================\n");
+        
+        printf("  [1] Adicionar novo barbeiro\n");
+    
+        printf("  [0] Voltar / Logout\n");
+        printf("======================================\n");
 
-#endif
+        printf("Escolha: ");
+
+        opcao = lerOpcao();
+
+        switch(opcao){
+            case 1:
+                adicionarBarbeiro();
+                pausarTela();
+                break;
+            case 0:
+                break;
+            default:    
+                printf("\nOpção inválida!\n");
+                pausarTela();
+        }
+    } while (opcao != 0);
+}
+
+
+NoBarbeiro* criarBarbeiro(){
+    NoBarbeiro* novoBarbeiro = (NoBarbeiro*)malloc(sizeof(NoBarbeiro));
+
+    if(novoBarbeiro == NULL){
+        printf("Mémoria insuficiente.\n");
+    return NULL;
+    }
+
+    novoBarbeiro->id = sistema.qtdBarbeiros + 1;
+    printf("Digite o nome do barbeiro: ");
+    scanf(" %[^\n]", novoBarbeiro->nome);
+    printf("Digite o email do barbeiro: ");
+    scanf("%s",novoBarbeiro->email);
+    printf("Digite a senha do barbeiro: ");
+    scanf("%s",novoBarbeiro->senha);
+
+    limparBufferInput();
+
+    novoBarbeiro->proximo = NULL;
+
+    return novoBarbeiro;
+}
+
+void adicionarBarbeiro(){
+    NoBarbeiro* novoBarbeiro = criarBarbeiro();
+
+    if (novoBarbeiro == NULL) {
+        printf("Barbeiro não foi criado corretamente!");
+        return; 
+    }
+
+    NoBarbeiro** head = &sistema.listaBarbeiros;
+
+    if (*head == NULL){
+        *head = novoBarbeiro;
+        printf("Novo Barbeiro adicionado!");
+        sistema.qtdBarbeiros++;
+        return;
+    }
+    
+    NoBarbeiro* temp = *head;
+
+    while(temp->proximo!=NULL){
+        temp = temp->proximo;
+    }
+
+    temp->proximo = novoBarbeiro;
+
+    printf("Novo Barbeiro adicionado!");
+
+    sistema.qtdBarbeiros++;
+}
+
