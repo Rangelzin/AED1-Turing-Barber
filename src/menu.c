@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "utils.h"
 #include "contexto.h" // Acesso aos dados globais (sistema.qtdClientes, etc)
+#include "controle_barbeiro.h"
 
  #ifdef _WIN32
     #include <windows.h>
@@ -44,6 +45,7 @@ void exibirMenuBarbeiro() {
         switch (opcao)
         {
         case 1:
+            adicionarBarbeiro();//Create
             printf("\n[TODO] Implementar CRUD de Barbeiros aqui.\n");
             pausarTela();
             break;
