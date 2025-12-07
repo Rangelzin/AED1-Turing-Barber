@@ -17,6 +17,8 @@ void menuGerenciarBarbeiros(){
         
         printf("  [2] Listar barbeiros\n");
 
+        printf("  [3] Excluir Barbeiro\n");
+
         printf("  [0] Voltar / Logout\n");
         printf("======================================\n");
 
@@ -32,6 +34,11 @@ void menuGerenciarBarbeiros(){
 
             case 2:
                 listarBarbeiros();
+                pausarTela();
+                break;
+
+            case 3:
+                deletarBarbeiro();
                 pausarTela();
                 break;
 
@@ -118,4 +125,43 @@ void listarBarbeiros(){
         printf("Email: %s\n", temp->email);
         temp = temp->proximo;
     }
+
+    printf("======================================\n");
 }
+
+    void deletarBarbeiro(){
+    int id_lido;
+        printf("Digite o id do Barbeiro que deseja excluir: ");
+            scanf("%d",&id_lido);
+            limparBufferInput();
+
+            if(sistema.listaBarbeiros == NULL){
+            printf("Não há barbeiros cadastrados !");
+            return;
+        }
+                if(sistema.listaBarbeiros->id==id_lido){
+                    NoBarbeiro* temp = sistema.listaBarbeiros;
+                    sistema.listaBarbeiros = sistema.listaBarbeiros->proximo;
+                    free(temp);
+                    printf("Barbeiro excluído com sucesso !\n");
+                    return;
+                    }
+
+                    NoBarbeiro* temp = sistema.listaBarbeiros;    
+
+                    while(temp->proximo != NULL && temp->proximo->id != id_lido){
+                        temp = temp->proximo;
+                    }
+
+                    if(temp->proximo == NULL){
+                        printf("ID inexistente!\n");
+                        return;
+                    }
+                                
+                    NoBarbeiro* alvo =  temp->proximo;
+
+                    temp->proximo = alvo->proximo;
+                    free(alvo);
+
+                    printf("Barbeiro excluído com sucesso !\n");
+    }

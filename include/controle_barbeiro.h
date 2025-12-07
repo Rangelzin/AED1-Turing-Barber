@@ -7,4 +7,6 @@ void menuGerenciarBarbeiros();
 
 void listarBarbeiros();
 
+void deletarBarbeiro();
+
 #endif
