@@ -1,5 +1,8 @@
 #include "contexto.h"
-#include <stddef.h> 
+#include "validacao_data.h"
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 ContextoSistema sistema;
 
@@ -37,4 +40,36 @@ NoCliente* buscarClientePorId(int id) {
         atual = atual->proximo;
     }
     return NULL;
+}
+
+int limparAgendamentosExpirados() {
+    int removidos = 0;
+    NoAgendamento* atual = sistema.agenda;
+    NoAgendamento* anterior = NULL;
+    
+    while (atual != NULL) {
+        // Verifica se o agendamento já passou
+        if (dataHoraPassou(atual->dia, atual->mes, atual->ano, atual->hora)) {
+            NoAgendamento* aRemover = atual;
+            
+            // Remove o nó da lista
+            if (anterior == NULL) {
+                // É o primeiro nó
+                sistema.agenda = atual->proximo;
+                atual = sistema.agenda;
+            } else {
+                anterior->proximo = atual->proximo;
+                atual = atual->proximo;
+            }
+            
+            free(aRemover);
+            sistema.qtdAgendamentos--;
+            removidos++;
+        } else {
+            anterior = atual;
+            atual = atual->proximo;
+        }
+    }
+    
+    return removidos;
 }

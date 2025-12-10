@@ -26,4 +26,8 @@ NoBarbeiro* buscarBarbeiroPorId(int id);
 // o nó do cliente ou NULL se não encontrado.
 NoCliente* buscarClientePorId(int id);
 
+// Remove agendamentos que já passaram da data/hora atual
+// Retorna o número de agendamentos removidos
+int limparAgendamentosExpirados();
+
 #endif

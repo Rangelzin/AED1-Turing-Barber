@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "controle_barbeiro.h"
 #include "controle_cliente.h"
+#include "validacao_data.h"
 #include <string.h> 
 
 // ============================================================================
@@ -64,7 +65,7 @@ NoBarbeiro* criarBarbeiro(){
     NoBarbeiro* novoBarbeiro = (NoBarbeiro*)malloc(sizeof(NoBarbeiro));
 
     if(novoBarbeiro == NULL){
-        printf("Mémoria insuficiente.\n");
+        printf("Mémória insuficiente.\n");
     return NULL;
     }
 
@@ -320,7 +321,7 @@ void controlarFila() {
         }
 
         free(proximo);
-        printf("\nCliente ID %d (%s) foi CHAMADO e removido da fila.\n", idProximo, nomeCliente);
+        printf("\n✅ Cliente ID %d (%s) foi CHAMADO e removido da fila.\n", idProximo, nomeCliente);
     } else if (opcao == 2) {
         printf("\nLista completa da fila:\n");
         NoFila* atual = sistema.filaInicio;
@@ -346,49 +347,79 @@ void controlarFila() {
 }
 
 void listarAgendamentos() {
+    // Limpa agendamentos expirados antes de listar
+    int removidos = limparAgendamentosExpirados();
+    
+    limparTela();
+    printf("======================================\n");
+    printf("     AGENDA - AGENDAMENTOS FUTUROS    \n");
+    printf("======================================\n");
+    
+    // Mostra data/hora atual
+    DataHora atual = obterDataHoraAtual();
+    char bufferAtual[100];
+    formatarData(atual.dia, atual.mes, atual.ano, atual.hora, bufferAtual);
+    printf("Data/Hora Atual: %s\n", bufferAtual);
+    printf("======================================\n");
+    
+    if (removidos > 0) {
+        printf("\nℹ️  %d agendamento(s) expirado(s) removido(s).\n", removidos);
+    }
+
     if (sistema.agenda == NULL) {
-        printf("Não há agendamentos cadastrados!\n");
+        printf("\nNão há agendamentos futuros!\n");
+        printf("======================================\n");
         return;
     }
 
-    limparTela();
-    printf("======================================\n");
-    printf("          LISTA DE AGENDAMENTOS       \n");
-    printf("======================================\n");
-
     NoAgendamento* temp = sistema.agenda;
+    int contadorFuturos = 0;
 
     while (temp != NULL) {
-        printf("\nAgendamento ID %d\n", temp->id);
-        
-        // Buscar nome do barbeiro
-        char nomeBarbeiro[100] = "Barbeiro Desconhecido";
-        NoBarbeiro* tempBarbeiro = sistema.listaBarbeiros;
-        while(tempBarbeiro != NULL) {
-            if (tempBarbeiro->id == temp->idBarbeiro) {
-                strcpy(nomeBarbeiro, tempBarbeiro->nome);
-                break;
+        // Verifica se o agendamento é futuro
+        if (dataHoraFutura(temp->dia, temp->mes, temp->ano, temp->hora)) {
+            printf("\n📅 Agendamento ID %d\n", temp->id);
+            
+            // Buscar nome do barbeiro
+            char nomeBarbeiro[100] = "Barbeiro Desconhecido";
+            NoBarbeiro* tempBarbeiro = sistema.listaBarbeiros;
+            while(tempBarbeiro != NULL) {
+                if (tempBarbeiro->id == temp->idBarbeiro) {
+                    strcpy(nomeBarbeiro, tempBarbeiro->nome);
+                    break;
+                }
+                tempBarbeiro = tempBarbeiro->proximo;
             }
-            tempBarbeiro = tempBarbeiro->proximo;
-        }
-        printf("Barbeiro: %s\n", nomeBarbeiro);
-        
-        // Buscar nome do cliente
-        char nomeCliente[100] = "Cliente Desconhecido";
-        NoCliente* tempCliente = sistema.listaClientes;
-        while(tempCliente != NULL) {
-            if (tempCliente->id == temp->idCliente) {
-                strcpy(nomeCliente, tempCliente->nome);
-                break;
+            printf("   Barbeiro: %s (ID: %d)\n", nomeBarbeiro, temp->idBarbeiro);
+            
+            // Buscar nome do cliente
+            char nomeCliente[100] = "Cliente Desconhecido";
+            NoCliente* tempCliente = sistema.listaClientes;
+            while(tempCliente != NULL) {
+                if (tempCliente->id == temp->idCliente) {
+                    strcpy(nomeCliente, tempCliente->nome);
+                    break;
+                }
+                tempCliente = tempCliente->proximo;
             }
-            tempCliente = tempCliente->proximo;
+            printf("   Cliente: %s (ID: %d)\n", nomeCliente, temp->idCliente);
+            
+            // Formata e exibe a data
+            char bufferData[100];
+            formatarData(temp->dia, temp->mes, temp->ano, temp->hora, bufferData);
+            printf("   Data/Hora: %s\n", bufferData);
+            
+            contadorFuturos++;
         }
-        printf("Cliente: %s\n", nomeCliente);
-        
-        printf("Data: %d/%d/%d\n", temp->dia, temp->mes, temp->ano);
-        printf("Horário: %dh\n", temp->hora);
         temp = temp->proximo;
     }
 
+    if (contadorFuturos == 0) {
+        printf("\nNão há agendamentos futuros!\n");
+    } else {
+        printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+        printf("Total de agendamentos futuros: %d\n", contadorFuturos);
+    }
+    
     printf("======================================\n");
 }

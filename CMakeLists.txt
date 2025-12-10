@@ -11,9 +11,12 @@ file(GLOB_RECURSE SOURCES "src/*.c")
 
 add_executable(turing_barber ${SOURCES})
 
+# Linkagem necessária para funções de tempo (time.h) no Linux
+if(UNIX)
+    target_link_libraries(turing_barber m)
+endif()
+
 set_target_properties(turing_barber PROPERTIES 
-   
     OUTPUT_NAME "turing_barber"
-    
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
