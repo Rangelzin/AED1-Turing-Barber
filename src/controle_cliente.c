@@ -298,7 +298,7 @@ void agendarHorario() {
     
     printf("Digite o ID do Barbeiro desejado: ");
     if (scanf("%d", &novoAgendamento->idBarbeiro) != 1) {
-        printf("❌ Entrada inválida. Cancelando agendamento.\n");
+        printf("Entrada inválida. Cancelando agendamento.\n");
         free(novoAgendamento);
         return;
     }
@@ -306,7 +306,7 @@ void agendarHorario() {
 
     // Verifica se o barbeiro existe
     if (buscarBarbeiroPorId(novoAgendamento->idBarbeiro) == NULL) {
-        printf("❌ Barbeiro ID %d não existe! Agendamento cancelado.\n", novoAgendamento->idBarbeiro);
+        printf("Barbeiro ID %d não existe! Agendamento cancelado.\n", novoAgendamento->idBarbeiro);
         free(novoAgendamento);
         return;
     }
@@ -314,35 +314,35 @@ void agendarHorario() {
     printf("\n--- Data do Agendamento ---\n");
     printf("Digite o Dia (dd): ");
     if (scanf("%d", &novoAgendamento->dia) != 1) {
-        printf("❌ Entrada inválida. Cancelando agendamento.\n");
+        printf("Entrada inválida. Cancelando agendamento.\n");
         free(novoAgendamento);
         return;
     }
     
     printf("Digite o Mês (mm): ");
     if (scanf("%d", &novoAgendamento->mes) != 1) {
-        printf("❌ Entrada inválida. Cancelando agendamento.\n");
+        printf("Entrada inválida. Cancelando agendamento.\n");
         free(novoAgendamento);
         return;
     }
     
     printf("Digite o Ano (aaaa): ");
     if (scanf("%d", &novoAgendamento->ano) != 1) {
-        printf("❌ Entrada inválida. Cancelando agendamento.\n");
+        printf("Entrada inválida. Cancelando agendamento.\n");
         free(novoAgendamento);
         return;
     }
     
     // VALIDAÇÃO 1: Data válida
     if (!dataValida(novoAgendamento->dia, novoAgendamento->mes, novoAgendamento->ano)) {
-        printf("❌ Data inválida! Verifique se a data existe (ex: não existe 31/02).\n");
+        printf("Data inválida! Verifique se a data existe (ex: não existe 31/02).\n");
         free(novoAgendamento);
         return;
     }
     
     printf("Digite a Hora (0-23): ");
     if (scanf("%d", &novoAgendamento->hora) != 1) {
-        printf("❌ Entrada inválida. Cancelando agendamento.\n");
+        printf("Entrada inválida. Cancelando agendamento.\n");
         free(novoAgendamento);
         return;
     }
@@ -350,14 +350,14 @@ void agendarHorario() {
     
     // VALIDAÇÃO 2: Hora válida
     if (!horaValida(novoAgendamento->hora)) {
-        printf("❌ Hora inválida! Digite um valor entre 0 e 23.\n");
+        printf("Hora inválida! Digite um valor entre 0 e 23.\n");
         free(novoAgendamento);
         return;
     }
     
     // VALIDAÇÃO 3: Horário comercial
     if (!horarioComercialValido(novoAgendamento->hora)) {
-        printf("❌ Horário fora do expediente! A barbearia funciona das 8h às 18h.\n");
+        printf("Horário fora do expediente! A barbearia funciona das 8h às 18h.\n");
         free(novoAgendamento);
         return;
     }
@@ -365,7 +365,7 @@ void agendarHorario() {
     // VALIDAÇÃO 4: Não agendar no passado
     if (dataHoraPassou(novoAgendamento->dia, novoAgendamento->mes, 
                        novoAgendamento->ano, novoAgendamento->hora)) {
-        printf("❌ Não é possível agendar em data/hora que já passou!\n");
+        printf("Não é possível agendar em data/hora que já passou!\n");
         char bufferTentativa[100];
         formatarData(novoAgendamento->dia, novoAgendamento->mes, 
                     novoAgendamento->ano, novoAgendamento->hora, bufferTentativa);
@@ -384,7 +384,7 @@ void agendarHorario() {
     formatarData(novoAgendamento->dia, novoAgendamento->mes, 
                 novoAgendamento->ano, novoAgendamento->hora, bufferConfirmacao);
     
-    printf("\n✅ Agendamento realizado com sucesso!\n");
+    printf("\nAgendamento realizado com sucesso!\n");
     printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
     printf("ID do Agendamento: %d\n", novoAgendamento->id);
     printf("Barbeiro ID: %d\n", novoAgendamento->idBarbeiro);
@@ -426,7 +426,7 @@ void entrarNaFila() {
         sistema.filaFim = novoNoFila;
     }
 
-    printf("\n✅ Você foi adicionado à fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
+    printf("\nVocê foi adicionado à fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
     
     // Contar a posição na fila
     int posicao = 1;
@@ -530,5 +530,5 @@ void sairDaFila() {
     }
 
     free(atual);
-    printf("\n✅ Você foi removido da fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
+    printf("\nVocê foi removido da fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
 }

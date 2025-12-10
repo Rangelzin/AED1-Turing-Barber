@@ -30,4 +30,8 @@ NoCliente* buscarClientePorId(int id);
 // Retorna o número de agendamentos removidos
 int limparAgendamentosExpirados();
 
+void salvarDados();
+
+void carregarDados();
+
 #endif

@@ -14,7 +14,12 @@ int main(){
         SetConsoleCP(65001);
     #endif
     inicializarSistema();
+
+    carregarDados();
+    
     exibirMenuPrincipal();
+
+    salvarDados();
 
     return 0;
 }
