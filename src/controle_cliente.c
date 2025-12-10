@@ -27,9 +27,9 @@ NoCliente* criarCliente(){
     printf("Digite o nome do cliente: ");
     scanf(" %[^\n]", novoCliente->nome);
     printf("Digite o telefone do cliente: ");
-    scanf("%[^\n]", novoCliente->telefone);
+    scanf(" %[^\n]", novoCliente->telefone);
     printf("Digite a senha do cliente: ");
-    scanf("%[^\n]", novoCliente->senha);
+    scanf(" %[^\n]", novoCliente->senha);
 
     limparBufferInput();
 
@@ -291,14 +291,37 @@ void agendarHorario() {
     }
     limparBufferInput();
 
+    // Verifica se o barbeiro existe
+    if (buscarBarbeiroPorId(novoAgendamento->idBarbeiro) == NULL) {
+        printf("Barbeiro ID %d inexistente! Agendamento cancelado.\n", novoAgendamento->idBarbeiro);
+        free(novoAgendamento);
+        return;
+    }
+
     printf("Digite o Dia (dd): ");
-    scanf("%d", &novoAgendamento->dia);
+    if (scanf("%d", &novoAgendamento->dia) != 1) {
+        printf("Entrada inválida. Cancelando agendamento.\n");
+        free(novoAgendamento);
+        return;
+    }
     printf("Digite o Mês (mm): ");
-    scanf("%d", &novoAgendamento->mes);
+    if (scanf("%d", &novoAgendamento->mes) != 1) {
+        printf("Entrada inválida. Cancelando agendamento.\n");
+        free(novoAgendamento);
+        return;
+    }
     printf("Digite o Ano (aaaa): ");
-    scanf("%d", &novoAgendamento->ano);
+    if (scanf("%d", &novoAgendamento->ano) != 1) {
+        printf("Entrada inválida. Cancelando agendamento.\n");
+        free(novoAgendamento);
+        return;
+    }
     printf("Digite a Hora (hh): ");
-    scanf("%d", &novoAgendamento->hora);
+    if (scanf("%d", &novoAgendamento->hora) != 1) {
+        printf("Entrada inválida. Cancelando agendamento.\n");
+        free(novoAgendamento);
+        return;
+    }
     limparBufferInput();
 
     novoAgendamento->proximo = sistema.agenda;
@@ -317,6 +340,12 @@ void agendarHorario() {
 
 
 void entrarNaFila() {
+    // Verifica se o cliente logado existe no sistema antes de inserir na fila
+    if (buscarClientePorId(CLIENTE_LOGADO_ID) == NULL) {
+        printf("Erro: Cliente logado (ID %d) não cadastrado. Operação cancelada.\n", CLIENTE_LOGADO_ID);
+        return;
+    }
+
     NoFila* temp = sistema.filaInicio;
     while(temp != NULL) {
         if (temp->idCliente == CLIENTE_LOGADO_ID) {
@@ -372,7 +401,16 @@ void listarMeusAgendamentos() {
     while (atual != NULL) {
         if (atual->idCliente == CLIENTE_LOGADO_ID) {
             printf("\nAgendamento ID: %d\n", atual->id);
-            printf("  Barbeiro ID: %d\n", atual->idBarbeiro);
+            char nomeBarbeiro[100] = "Barbeiro Desconhecido";
+            NoBarbeiro* tempBarbeiro = sistema.listaBarbeiros;
+            while(tempBarbeiro != NULL) {
+                if (tempBarbeiro->id == atual->idBarbeiro) {
+                    strcpy(nomeBarbeiro, tempBarbeiro->nome);
+                    break;
+                }
+                tempBarbeiro = tempBarbeiro->proximo;
+            }
+            printf("Barbeiro: %s\n", nomeBarbeiro);
             printf("  Data: %d/%d/%d às %dh\n", 
                     atual->dia, atual->mes, atual->ano, atual->hora);
             encontrados++;

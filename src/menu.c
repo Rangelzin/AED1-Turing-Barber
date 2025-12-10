@@ -62,7 +62,7 @@ void exibirMenuBarbeiro() {
             pausarTela();
             break;
         case 3:
-            printf("\n[TODO] Listar agendamentos da lista 'sistema.agenda'.\n");
+            listarAgendamentos();
             pausarTela();
             break;
         case 4:

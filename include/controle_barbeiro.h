@@ -14,4 +14,6 @@ void atualizarBarbeiro();
 
 void controlarFila();
 
+void listarAgendamentos();
+
 #endif

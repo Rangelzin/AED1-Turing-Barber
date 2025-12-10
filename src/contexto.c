@@ -18,3 +18,23 @@ void inicializarSistema() {
     sistema.qtdBarbeiros = 0;
     sistema.qtdAgendamentos = 0;
 }
+
+NoBarbeiro* buscarBarbeiroPorId(int id) {
+    if (sistema.listaBarbeiros == NULL) return NULL;
+    NoBarbeiro* atual = sistema.listaBarbeiros;
+    while (atual != NULL) {
+        if (atual->id == id) return atual;
+        atual = atual->proximo;
+    }
+    return NULL;
+}
+
+NoCliente* buscarClientePorId(int id) {
+    if (sistema.listaClientes == NULL) return NULL;
+    NoCliente* atual = sistema.listaClientes;
+    while (atual != NULL) {
+        if (atual->id == id) return atual;
+        atual = atual->proximo;
+    }
+    return NULL;
+}

@@ -344,3 +344,51 @@ void controlarFila() {
         printf("\nOperação cancelada.\n");
     }
 }
+
+void listarAgendamentos() {
+    if (sistema.agenda == NULL) {
+        printf("Não há agendamentos cadastrados!\n");
+        return;
+    }
+
+    limparTela();
+    printf("======================================\n");
+    printf("          LISTA DE AGENDAMENTOS       \n");
+    printf("======================================\n");
+
+    NoAgendamento* temp = sistema.agenda;
+
+    while (temp != NULL) {
+        printf("\nAgendamento ID %d\n", temp->id);
+        
+        // Buscar nome do barbeiro
+        char nomeBarbeiro[100] = "Barbeiro Desconhecido";
+        NoBarbeiro* tempBarbeiro = sistema.listaBarbeiros;
+        while(tempBarbeiro != NULL) {
+            if (tempBarbeiro->id == temp->idBarbeiro) {
+                strcpy(nomeBarbeiro, tempBarbeiro->nome);
+                break;
+            }
+            tempBarbeiro = tempBarbeiro->proximo;
+        }
+        printf("Barbeiro: %s\n", nomeBarbeiro);
+        
+        // Buscar nome do cliente
+        char nomeCliente[100] = "Cliente Desconhecido";
+        NoCliente* tempCliente = sistema.listaClientes;
+        while(tempCliente != NULL) {
+            if (tempCliente->id == temp->idCliente) {
+                strcpy(nomeCliente, tempCliente->nome);
+                break;
+            }
+            tempCliente = tempCliente->proximo;
+        }
+        printf("Cliente: %s\n", nomeCliente);
+        
+        printf("Data: %d/%d/%d\n", temp->dia, temp->mes, temp->ano);
+        printf("Horário: %dh\n", temp->hora);
+        temp = temp->proximo;
+    }
+
+    printf("======================================\n");
+}

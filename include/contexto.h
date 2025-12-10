@@ -18,4 +18,12 @@ extern ContextoSistema sistema;
 
 void inicializarSistema();
 
+// Procura um barbeiro pelo ID na lista do sistema. Retorna ponteiro para
+// o nó do barbeiro ou NULL se não encontrado.
+NoBarbeiro* buscarBarbeiroPorId(int id);
+
+// Procura um cliente pelo ID na lista do sistema. Retorna ponteiro para
+// o nó do cliente ou NULL se não encontrado.
+NoCliente* buscarClientePorId(int id);
+
 #endif
