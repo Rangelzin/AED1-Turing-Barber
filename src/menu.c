@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include "menu.h"
 #include "utils.h"
-#include "contexto.h" // Acesso aos dados globais (sistema.qtdClientes, etc)
+#include "contexto.h" 
 #include "controle_barbeiro.h"
+#include "controle_cliente.h"
 
  #ifdef _WIN32
     #include <windows.h>
@@ -33,10 +34,18 @@ void exibirMenuBarbeiro() {
         printf("  [0] Voltar / Logout\n");
         printf("======================================\n");
 
+        // Calculando quantos na fila
+        int qtdFila = 0;
+        NoFila* pFila = sistema.filaInicio;
+        while(pFila != NULL) {
+            qtdFila++;
+            pFila = pFila->proximo;
+        }
+
         // Exibindo estatísticas rápidas usando o contexto global
         printf(" Status: %d Clientes | %d Na Fila\n",
                sistema.qtdClientes,
-               0); 
+               qtdFila); 
         printf("======================================\n");
         printf("Escolha: ");
 
@@ -49,9 +58,7 @@ void exibirMenuBarbeiro() {
             pausarTela();
             break;
         case 2:
-            printf("\n[TODO] Implementar CRUD de Clientes aqui.\n");
-            // Exemplo de como seria a chamada futura:
-            // gerenciarClientes();
+            gerenciarClientes(); // Implementado em controle_cliente.c
             pausarTela();
             break;
         case 3:
@@ -59,7 +66,7 @@ void exibirMenuBarbeiro() {
             pausarTela();
             break;
         case 4:
-            printf("\n[TODO] Mostrar 'sistema.filaInicio' e chamar proximo.\n");
+            controlarFila(); // Implementado em controle_barbeiro.c
             pausarTela();
             break;
         case 0:
@@ -100,19 +107,19 @@ void exibirMenuCliente()
 
         switch(opcao) {
             case 1:
-                printf("\n[TODO] Criar novo NoAgendamento e inserir em 'sistema.agenda'.\n");
+                agendarHorario(); // Implementado em controle_cliente.c
                 pausarTela();
                 break;
             case 2:
-                printf("\n[TODO] Adicionar usuario atual em 'sistema.filaFim'.\n");
+                entrarNaFila(); // Implementado em controle_cliente.c
                 pausarTela();
                 break;
             case 3:
-                printf("\n[TODO] Varrer agenda filtrando pelo ID do usuario.\n");
+                listarMeusAgendamentos(); // Implementado em controle_cliente.c
                 pausarTela();
                 break;
             case 4:
-                printf("\n[TODO] Remover usuario atual da fila.\n");
+                sairDaFila(); // Implementado em controle_cliente.c
                 pausarTela();
                 break;
             case 0:
@@ -129,6 +136,7 @@ void exibirMenuCliente()
 // ============================================================================
 
 void exibirMenuPrincipal() {
+    
     int opcao;
     
     do {
@@ -148,11 +156,11 @@ void exibirMenuPrincipal() {
         switch(opcao) {
             case 1:
                 // Futuramente: validarSenhaAdmin();
-                exibirMenuBarbeiro(); // Chama a função local acima
+                exibirMenuBarbeiro(); 
                 break;
             case 2:
                 // Futuramente: loginCliente();
-                exibirMenuCliente(); // Chama a função local acima
+                exibirMenuCliente(); 
                 break;
             case 0:
                 printf("\nObrigado por usar o Turing Barber. Encerrando...\n");

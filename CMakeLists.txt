@@ -3,6 +3,8 @@ project(TuringBarber VERSION 1.0)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
 include_directories(include)
 
 file(GLOB_RECURSE SOURCES "src/*.c")
