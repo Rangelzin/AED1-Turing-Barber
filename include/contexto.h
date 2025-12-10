@@ -12,6 +12,8 @@ typedef struct {
     int qtdClientes;
     int qtdBarbeiros;
     int qtdAgendamentos;
+    int idClienteLogado;
+    int idBarbeiroLogado;
 } ContextoSistema;
 
 extern ContextoSistema sistema;
