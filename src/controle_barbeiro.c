@@ -16,36 +16,36 @@ void menuGerenciarBarbeiros(){
     
     do {
         limparTela();
-        printf("======================================\n");
-        printf("     GERENCIAR EQUIPE (BARBEIROS)     \n");
-        printf("======================================\n");
-        
+        imprimirCabecalho("GERENCIAR EQUIPE");
         printf("  [1] Adicionar novo barbeiro\n");
         printf("  [2] Listar barbeiros\n");
         printf("  [3] Excluir Barbeiro\n");
         printf("  [4] Atualizar dados do Barbeiro\n");
         printf("  [0] Voltar / Logout\n");
-        printf("======================================\n");
+        imprimirRodape();
 
         printf("Escolha: ");
-
         opcao = lerOpcao();
 
         switch(opcao){
             case 1:
                 adicionarBarbeiro();
+                salvarDados();
                 pausarTela();
                 break;
             case 2:
                 listarBarbeiros();
+                salvarDados();
                 pausarTela();
                 break;
             case 3:
                 deletarBarbeiro();
+                salvarDados();
                 pausarTela();
                 break;
             case 4:
                 atualizarBarbeiro();
+                salvarDados();
                 pausarTela();
                 break;
             case 0:
@@ -114,45 +114,45 @@ void adicionarBarbeiro(){
     sistema.qtdBarbeiros++;
 }
 
-void listarBarbeiros(){
-
-    if(sistema.listaBarbeiros == NULL){
+void listarBarbeiros()
+{
+    if (sistema.listaBarbeiros == NULL)
+    {
         printf("Não há barbeiros cadastrados !");
         return;
     }
 
     limparTela();
-    printf("======================================\n");
-    printf("          LISTA DE BARBEIROS          \n");
-    printf("======================================\n");
+    imprimirCabecalho("LISTA DE BARBEIROS");
 
-    NoBarbeiro* temp = sistema.listaBarbeiros;
-
-    while (temp != NULL){
-        printf("\nBarbeiro %d\n", temp->id);
-        printf("Nome: %s\n", temp->nome);
-        printf("Email: %s\n", temp->email);
+    NoBarbeiro *temp = sistema.listaBarbeiros;
+    while (temp != NULL)
+    {
+        printf(" ID: %d | Nome: %s\n", temp->id, temp->nome);
+        printf(" Email: %s\n", temp->email);
+        imprimirSeparador();
         temp = temp->proximo;
     }
-
-    printf("======================================\n");
 }
 
-void deletarBarbeiro(){
+void deletarBarbeiro()
+{
     int id_lido;
     printf("Digite o id do Barbeiro que deseja excluir: ");
-    scanf("%d",&id_lido);
+    scanf("%d", &id_lido);
     limparBufferInput();
 
-    if(sistema.listaBarbeiros == NULL){
+    if (sistema.listaBarbeiros == NULL)
+    {
         printf("Não há barbeiros cadastrados !");
         return;
     }
-    
-    NoBarbeiro* atual = sistema.listaBarbeiros;
-    NoBarbeiro* anterior = NULL;
 
-    if(atual != NULL && atual->id==id_lido){
+    NoBarbeiro *atual = sistema.listaBarbeiros;
+    NoBarbeiro *anterior = NULL;
+
+    if (atual != NULL && atual->id == id_lido)
+    {
         sistema.listaBarbeiros = atual->proximo;
         free(atual);
         printf("Barbeiro excluído com sucesso !\n");
@@ -160,16 +160,18 @@ void deletarBarbeiro(){
         return;
     }
 
-    while(atual != NULL && atual->id != id_lido){
+    while (atual != NULL && atual->id != id_lido)
+    {
         anterior = atual;
         atual = atual->proximo;
     }
 
-    if(atual == NULL){
+    if (atual == NULL)
+    {
         printf("ID inexistente!\n");
         return;
     }
-                
+
     anterior->proximo = atual->proximo;
     free(atual);
 
@@ -177,98 +179,106 @@ void deletarBarbeiro(){
     sistema.qtdBarbeiros--;
 }
 
-
-void atualizarBarbeiro(){
+void atualizarBarbeiro()
+{
     int id_lido, option;
     printf("Digite o id do Barbeiro que deseja editar: ");
-        scanf("%d",&id_lido);
-        limparBufferInput();
+    scanf("%d", &id_lido);
+    limparBufferInput();
 
-        if(sistema.listaBarbeiros == NULL){
+    if (sistema.listaBarbeiros == NULL)
+    {
         printf("Não há barbeiros cadastrados !");
         return;
-        }
-            NoBarbeiro* temp = sistema.listaBarbeiros;
+    }
+    NoBarbeiro *temp = sistema.listaBarbeiros;
 
-            while(temp != NULL && temp->id != id_lido){
-                temp = temp->proximo;
-            }
+    while (temp != NULL && temp->id != id_lido)
+    {
+        temp = temp->proximo;
+    }
 
-            if(temp == NULL){
-                printf("ID inexistente!\n");
-                return;
-            }
+    if (temp == NULL)
+    {
+        printf("ID inexistente!\n");
+        return;
+    }
 
-            limparTela();
-            printf("=================================\n");
-            printf("  Barbeiro %d\n", temp->id);
-            printf("  Nome: %s\n", temp->nome);
-            printf("  Email: %s\n", temp->email);
-            printf("=================================\n\n");
-            printf("O que deseja editar do barbeiro selecionado ?\n");
-            printf("  [1] Nome\n");
-            printf("  [2] Email\n");
-            printf("  [3] Senha\n");
-            printf("  [4] Todas as informações\n");
-            printf("  [0] Cancelar edição\n");
-            
-            printf("Escolha: \n");
-            scanf("%d", &option);
-            limparBufferInput();
+    limparTela();
+    char titulo[100];
+    sprintf(titulo, "EDITAR BARBEIRO %d", temp->id);
+    imprimirCabecalho(titulo);
 
-            switch(option) {
-                case 1:
-                printf("Digite o novo nome: ");
-                scanf( " %[^\n]", temp->nome);
-                limparBufferInput();
-                printf("Nome editado !\n");
-                break;
+    printf("  Nome Atual: %s\n", temp->nome);
+    printf("  Email Atual: %s\n", temp->email);
+    imprimirSeparador();
 
-                case 2:
-                printf("Digite o novo email: ");
-                scanf( " %[^\n]", temp->email);
-                limparBufferInput();
-                printf("Email editado !\n");
-                break;
+    printf("O que deseja editar?\n");
+    printf("  [1] Nome\n");
+    printf("  [2] Email\n");
+    printf("  [3] Senha\n");
+    printf("  [4] Todas as informações\n");
+    printf("  [0] Cancelar edição\n");
+    imprimirRodape();
 
-                case 3:
-                printf("Digite a nova senha: ");
-                scanf( " %[^\n]", temp->senha);
-                limparBufferInput();
-                printf("Senha editada !\n");
-                break;
+    printf("Escolha: \n");
+    scanf("%d", &option);
+    limparBufferInput();
 
-                case 4:
-                printf("Digite o novo nome: ");
-                scanf( " %[^\n]", temp->nome);
-                limparBufferInput();
-                printf("Nome editado !\n");
+    switch (option)
+    {
+    case 1:
+        printf("Digite o novo nome: ");
+        scanf(" %[^\n]", temp->nome);
+        limparBufferInput();
+        printf("Nome editado !\n");
+        break;
 
-                printf("Digite o novo email: ");
-                scanf( " %[^\n]", temp->email);
-                limparBufferInput();
-                printf("Email editado !\n");
+    case 2:
+        printf("Digite o novo email: ");
+        scanf(" %[^\n]", temp->email);
+        limparBufferInput();
+        printf("Email editado !\n");
+        break;
 
-                printf("Digite a nova senha: ");
-                scanf( " %[^\n]", temp->senha);
-                limparBufferInput();
-                printf("Senha editada !\n");
-                break;
+    case 3:
+        printf("Digite a nova senha: ");
+        scanf(" %[^\n]", temp->senha);
+        limparBufferInput();
+        printf("Senha editada !\n");
+        break;
 
-                case 0:
-                printf("Atualização de Barbeiro cancelada.\n");
-                return;
+    case 4:
+        printf("Digite o novo nome: ");
+        scanf(" %[^\n]", temp->nome);
+        limparBufferInput();
+        printf("Nome editado !\n");
 
-                default:
-            printf("Opcao invalida.\n");
-            }
-        printf("\n=================================\n");
-        printf("  Barbeiro %d\n", temp->id);
-        printf("  Nome: %s\n", temp->nome);
-        printf("  Email: %s\n", temp->email);
-        printf("=================================\n\n");
+        printf("Digite o novo email: ");
+        scanf(" %[^\n]", temp->email);
+        limparBufferInput();
+        printf("Email editado !\n");
+
+        printf("Digite a nova senha: ");
+        scanf(" %[^\n]", temp->senha);
+        limparBufferInput();
+        printf("Senha editada !\n");
+        break;
+
+    case 0:
+        printf("Atualização de Barbeiro cancelada.\n");
+        return;
+
+    default:
+        printf("Opcao invalida.\n");
+    }
+    printf("\n");
+    imprimirSeparador();
+    printf("  Barbeiro %d\n", temp->id);
+    printf("  Nome: %s\n", temp->nome);
+    printf("  Email: %s\n", temp->email);
+    imprimirSeparador();
 }
-
 
 // ============================================================================
 //                                RF-004: CONTROLAR FILA
@@ -276,12 +286,11 @@ void atualizarBarbeiro(){
 
 void controlarFila() {
     limparTela();
-    printf("======================================\n");
-    printf("        CONTROLAR FILA DE ESPERA      \n");
-    printf("======================================\n");
+    imprimirCabecalho("FILA DE ESPERA");
 
     if (sistema.filaInicio == NULL) {
         printf("A fila de espera está vazia.\n");
+        imprimirRodape();
         return;
     }
 
@@ -300,14 +309,12 @@ void controlarFila() {
         tempCliente = tempCliente->proximo;
     }
     printf("Nome: %s\n", nomeCliente);
-    printf("--------------------------------------\n");
-
-
+    imprimirSeparador();
     printf("[1] Chamar o Próximo (Remover da Fila)\n");
     printf("[2] Apenas Visualizar a Fila\n");
     printf("[0] Voltar\n");
-    printf("Escolha: ");
-    
+    imprimirRodape();
+
     int opcao = lerOpcao();
 
     if (opcao == 1) {
@@ -346,29 +353,25 @@ void controlarFila() {
     }
 }
 
-void listarAgendamentos() {
-    // Limpa agendamentos expirados antes de listar
+void listarAgendamentos()
+{
     int removidos = limparAgendamentosExpirados();
     
     limparTela();
-    printf("======================================\n");
-    printf("     AGENDA - AGENDAMENTOS FUTUROS    \n");
-    printf("======================================\n");
-    
-    // Mostra data/hora atual
+    imprimirCabecalho("AGENDA FUTURA");
+
     DataHora atual = obterDataHoraAtual();
     char bufferAtual[100];
     formatarData(atual.dia, atual.mes, atual.ano, atual.hora, bufferAtual);
     printf("Data/Hora Atual: %s\n", bufferAtual);
-    printf("======================================\n");
-    
+
     if (removidos > 0) {
         printf("\nℹ️  %d agendamento(s) expirado(s) removido(s).\n", removidos);
     }
+    imprimirSeparador();
 
     if (sistema.agenda == NULL) {
         printf("\nNão há agendamentos futuros!\n");
-        printf("======================================\n");
         return;
     }
 
@@ -415,11 +418,13 @@ void listarAgendamentos() {
     }
 
     if (contadorFuturos == 0) {
-        printf("\nNão há agendamentos futuros!\n");
-    } else {
+        imprimirSeparador();
+    }
+    else
+    {
         printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
         printf("Total de agendamentos futuros: %d\n", contadorFuturos);
     }
-    
-    printf("======================================\n");
+
+    imprimirSeparador();
 }

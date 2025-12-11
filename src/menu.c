@@ -4,9 +4,9 @@
 #include "contexto.h" 
 #include "controle_barbeiro.h"
 #include "controle_cliente.h"
-#include "autenticacao.h" // Importante para as funções de login/logout
+#include "autenticacao.h"
 
- #ifdef _WIN32
+#ifdef _WIN32
     #include <windows.h>
 #else
     #include <unistd.h>
@@ -18,20 +18,22 @@
 
 void exibirMenuBarbeiro() {
     int opcao;
-    do
-    {
+    char titulo[100]; // Buffer para formatar o título com ID
+
+    do {
         limparTela();
-        // O menu agora exibe o ID do barbeiro logado (Admin)
-        printf("======================================\n");
-        printf("      AREA DO BARBEIRO (ID: %d)       \n", sistema.idBarbeiroLogado);
-        printf("======================================\n");
+        
+        // Formata o título com o ID dinâmico
+        sprintf(titulo, "AREA DO BARBEIRO (ID: %d)", sistema.idBarbeiroLogado);
+        imprimirCabecalho(titulo);
         
         printf("  [1] Gerenciar Equipe (Barbeiros)\n");
         printf("  [2] Gerenciar Clientes\n");
         printf("  [3] Ver Agenda (Dia/Semana)\n");
         printf("  [4] Controlar Fila de Espera\n");
         printf("  [0] Voltar / Logout\n");
-        printf("======================================\n");
+        
+        imprimirRodape(); // Fecha a caixa do menu
 
         // Calculando quantos na fila
         int qtdFila = 0;
@@ -41,9 +43,10 @@ void exibirMenuBarbeiro() {
             atual = atual->proximo;
         }
 
-        printf("Barbeiros Cadastrados: %d | Clientes: %d | Na Fila: %d\n", 
+        // Exibe estatísticas rápidas abaixo do menu
+        printf("Barbeiros: %d | Clientes: %d | Na Fila: %d\n", 
                sistema.qtdBarbeiros, sistema.qtdClientes, qtdFila);
-        printf("======================================\n");
+        imprimirSeparador();
         
         printf("Escolha: ");
         opcao = lerOpcao();
@@ -51,22 +54,24 @@ void exibirMenuBarbeiro() {
         switch(opcao) {
             case 1:
                 menuGerenciarBarbeiros();
-                pausarTela();
+                // O pausarTela já tem separador embutido no novo utils
+                pausarTela(); 
                 break;
             case 2:
                 gerenciarClientes();
                 pausarTela();
                 break;
             case 3:
-                listarAgendamentos(); // Implementado em controle_barbeiro.c
+                listarAgendamentos();
                 pausarTela();
                 break;
             case 4:
-                controlarFila(); // Implementado em controle_barbeiro.c
+                controlarFila();
+                salvarDados();
                 pausarTela();
                 break;
             case 0:
-                fazerLogout(); // Zera o ID do barbeiro logado
+                fazerLogout();
                 printf("Logout realizado com sucesso.\n");
                 break;
             default:
@@ -82,43 +87,44 @@ void exibirMenuBarbeiro() {
 
 void exibirMenuCliente() {
     int opcao;
-    do
-    {
+    char titulo[100];
+
+    do {
         limparTela();
-        // O menu agora exibe o ID do cliente logado
-        printf("======================================\n");
-        printf("      AREA DO CLIENTE (ID: %d)       \n", sistema.idClienteLogado);
-        printf("======================================\n");
+        
+        sprintf(titulo, "AREA DO CLIENTE (ID: %d)", sistema.idClienteLogado);
+        imprimirCabecalho(titulo);
         
         printf("  [1] Agendar Horário\n");
         printf("  [2] Entrar na Fila de Espera\n");
         printf("  [3] Ver Meus Agendamentos\n");
         printf("  [4] Sair da Fila de Espera\n");
         printf("  [0] Voltar / Logout\n");
-        printf("======================================\n");
-        printf("Escolha: ");
         
+        imprimirRodape();
+
+        printf("Escolha: ");
         opcao = lerOpcao();
 
         switch(opcao) {
             case 1:
-                agendarHorario(); // Implementado em controle_cliente.c
+                agendarHorario();
                 pausarTela();
                 break;
             case 2:
-                entrarNaFila(); // Implementado em controle_cliente.c
+                entrarNaFila();
                 pausarTela();
                 break;
             case 3:
-                listarMeusAgendamentos(); // Implementado em controle_cliente.c
+                listarMeusAgendamentos();
                 pausarTela();
                 break;
             case 4:
-                sairDaFila(); // Implementado em controle_cliente.c
+                sairDaFila();
                 pausarTela();
                 break;
             case 0:
-                fazerLogout(); // Zera o ID do cliente logado
+                fazerLogout();
                 printf("Logout realizado com sucesso.\n");
                 break;
             default:
@@ -137,41 +143,37 @@ void exibirMenuPrincipal() {
 
     do {
         limparTela();
-        printf("======================================\n");
-        printf("      T U R I N G   B A R B E R       \n");
-        printf("======================================\n");
+        
+        imprimirCabecalho("T U R I N G   B A R B E R");
         printf("  Bem-vindo! Identifique-se:\n\n");
         printf("  [1] Sou Barbeiro / Admin\n");
         printf("  [2] Sou Cliente\n");
         printf("  [0] Encerrar Programa\n");
-        printf("======================================\n");
-        printf("Escolha: ");
+        imprimirRodape();
 
+        printf("Escolha: ");
         opcao = lerOpcao();
 
         switch(opcao) {
             case 1:
-                // Tenta fazer o login. Se for bem-sucedido (retorna 1), exibe o menu barbeiro/admin
                 if (fazerLoginBarbeiro()) {
                     exibirMenuBarbeiro(); 
                 }
                 break;
             case 2:
-                // Tenta fazer o login. Se for bem-sucedido (retorna 1), exibe o menu cliente
                 if (fazerLoginCliente()) {
                     exibirMenuCliente(); 
                 }
                 break;
             case 0:
                 printf("\nObrigado por usar o Turing Barber. Encerrando...\n");
-                // Contagem regressiva de encerramento
                 for (int i = 3; i >= 1; --i) {
                     printf("  Encerrando em %d...\r", i);
                     fflush(stdout);
                     #ifdef _WIN32
-                        Sleep(1000); // milissegundos
+                        Sleep(1000);
                     #else
-                        sleep(1); // segundos
+                        sleep(1);
                     #endif
                 }
                 printf("  Encerrando em 0...   \n");

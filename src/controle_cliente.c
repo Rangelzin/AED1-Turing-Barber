@@ -7,10 +7,6 @@
 #include "estruturas.h"
 #include "validacao_data.h"
 
-// ID TEMPORÁRIO para simular o cliente logado, pois não há login
-// OBS: Você deve mudar isso quando implementar o login.
-#define CLIENTE_LOGADO_ID 1 
-
 // ============================================================================
 //                                FUNÇÕES AUXILIARES
 // ============================================================================
@@ -48,36 +44,37 @@ void gerenciarClientes(){
     
     do {
         limparTela();
-        printf("======================================\n");
-        printf("     GERENCIAR CLIENTES (ADMIN)       \n");
-        printf("======================================\n");
-        
+        imprimirCabecalho("GERENCIAR CLIENTES");
+
         printf("  [1] Adicionar novo Cliente\n");
         printf("  [2] Listar Clientes\n");
         printf("  [3] Excluir Cliente\n");
         printf("  [4] Atualizar dados do Cliente\n");
         printf("  [0] Voltar\n");
-        printf("======================================\n");
+        imprimirRodape();
 
         printf("Escolha: ");
-
         opcao = lerOpcao();
 
         switch(opcao){
             case 1:
                 adicionarCliente();
+                salvarDados();
                 pausarTela();
                 break;
             case 2:
                 listarClientes();
+                salvarDados();
                 pausarTela();
                 break;
             case 3:
                 deletarCliente();
+                salvarDados();
                 pausarTela();
                 break;
             case 4:
                 atualizarCliente();
+                salvarDados();
                 pausarTela();
                 break;
             case 0:
@@ -116,25 +113,21 @@ void adicionarCliente(){
 
 void listarClientes(){
     limparTela();
-    printf("======================================\n");
-    printf("          LISTA DE CLIENTES           \n");
-    printf("======================================\n");
+    imprimirCabecalho("LISTA DE CLIENTES");
 
     if(sistema.listaClientes == NULL){
         printf("Não há clientes cadastrados !\n");
+        imprimirRodape();
         return;
     }
 
-    NoCliente* temp = sistema.listaClientes;
-
+    NoCliente *temp = sistema.listaClientes;
     while (temp != NULL){
-        printf("\nCliente %d\n", temp->id);
-        printf("  Nome: %s\n", temp->nome);
-        printf("  Telefone: %s\n", temp->telefone);
+        printf(" ID: %d | Nome: %s\n", temp->id, temp->nome);
+        printf(" Tel: %s\n", temp->telefone);
+        imprimirSeparador();
         temp = temp->proximo;
     }
-
-    printf("======================================\n");
 }
 
 void deletarCliente(){
@@ -198,11 +191,12 @@ void atualizarCliente(){
     }
 
     limparTela();
-    printf("=================================\n");
+    imprimirSeparador();
     printf("  Cliente %d\n", temp->id);
     printf("  Nome: %s\n", temp->nome);
     printf("  Telefone: %s\n", temp->telefone);
-    printf("=================================\n\n");
+    imprimirSeparador();
+    printf("\n");
     printf("O que deseja editar do cliente selecionado?\n");
     printf("  [1] Nome\n");
     printf("  [2] Telefone\n");
@@ -260,11 +254,11 @@ void atualizarCliente(){
         return;
     }
 
-    printf("\n--- Dados Atualizados ---\n");
+    printf("\n━━━━ Dados Atualizados ━━━━\n");
     printf("  Cliente %d\n", temp->id);
     printf("  Nome: %s\n", temp->nome);
     printf("  Telefone: %s\n", temp->telefone);
-    printf("---------------------------\n");
+    printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
 
 
@@ -274,17 +268,16 @@ void atualizarCliente(){
 
 void agendarHorario() {
     limparTela();
-    printf("======================================\n");
-    printf("        NOVO AGENDAMENTO              \n");
-    printf("======================================\n");
-    
+    imprimirCabecalho("NOVO AGENDAMENTO");
+
     // Mostra data/hora atual para referência
     DataHora atual = obterDataHoraAtual();
     char bufferAtual[100];
     formatarData(atual.dia, atual.mes, atual.ano, atual.hora, bufferAtual);
     printf("Data/Hora Atual: %s\n", bufferAtual);
     printf("Horário de Funcionamento: 8h às 18h\n");
-    printf("======================================\n\n");
+    imprimirSeparador();
+    printf("\n");
 
     NoAgendamento* novoAgendamento = (NoAgendamento*)malloc(sizeof(NoAgendamento));
     
@@ -294,7 +287,9 @@ void agendarHorario() {
     }
 
     novoAgendamento->id = sistema.qtdAgendamentos + 1;
-    novoAgendamento->idCliente = CLIENTE_LOGADO_ID;
+    
+    // ATUALIZAÇÃO: Usa o ID real do cliente logado no sistema
+    novoAgendamento->idCliente = sistema.idClienteLogado;
     
     printf("Digite o ID do Barbeiro desejado: ");
     if (scanf("%d", &novoAgendamento->idBarbeiro) != 1) {
@@ -392,17 +387,17 @@ void agendarHorario() {
     printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
 
-
 void entrarNaFila() {
-    // Verifica se o cliente logado existe no sistema antes de inserir na fila
-    if (buscarClientePorId(CLIENTE_LOGADO_ID) == NULL) {
-        printf("Erro: Cliente logado (ID %d) não cadastrado. Operação cancelada.\n", CLIENTE_LOGADO_ID);
+    // ATUALIZAÇÃO: Verifica o ID real do cliente logado
+    if (buscarClientePorId(sistema.idClienteLogado) == NULL) {
+        printf("Erro: Cliente logado (ID %d) não cadastrado. Operação cancelada.\n", sistema.idClienteLogado);
         return;
     }
 
     NoFila* temp = sistema.filaInicio;
     while(temp != NULL) {
-        if (temp->idCliente == CLIENTE_LOGADO_ID) {
+        // Verifica se o ID do cliente logado já está na fila
+        if (temp->idCliente == sistema.idClienteLogado) {
             printf("\nVocê já está na fila de espera!\n");
             return;
         }
@@ -415,7 +410,8 @@ void entrarNaFila() {
         return;
     }
     
-    novoNoFila->idCliente = CLIENTE_LOGADO_ID;
+    // Atribui o ID do cliente logado
+    novoNoFila->idCliente = sistema.idClienteLogado;
     novoNoFila->proximo = NULL;
 
     if (sistema.filaFim == NULL) {
@@ -426,43 +422,47 @@ void entrarNaFila() {
         sistema.filaFim = novoNoFila;
     }
 
-    printf("\nVocê foi adicionado à fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
+    printf("\nVocê foi adicionado à fila de espera (ID Cliente: %d)!\n", sistema.idClienteLogado);
     
     // Contar a posição na fila
     int posicao = 1;
     NoFila* p = sistema.filaInicio;
-    while (p != NULL && p->idCliente != CLIENTE_LOGADO_ID) {
+    while (p != NULL && p->idCliente != sistema.idClienteLogado) {
         posicao++;
         p = p->proximo;
     }
     printf("   Sua posição na fila: %dº\n", posicao);
 }
 
-void listarMeusAgendamentos() {
-    // Primeiro, limpa agendamentos expirados
+void listarMeusAgendamentos()
+{
     int removidos = limparAgendamentosExpirados();
     
     limparTela();
-    printf("======================================\n");
-    printf("   MEUS AGENDAMENTOS (ID: %d)         \n", CLIENTE_LOGADO_ID);
-    printf("======================================\n");
-    
+    char titulo[100];
+    // ATUALIZAÇÃO: Título dinâmico com o ID real
+    sprintf(titulo, "MEUS AGENDAMENTOS (ID: %d)", sistema.idClienteLogado);
+    imprimirCabecalho(titulo);
+
     if (removidos > 0) {
-        printf("ℹ️  %d agendamento(s) expirado(s) foi(ram) removido(s).\n\n", removidos);
+        printf("ℹ️  %d expirado(s) removido(s).\n", removidos);
+        imprimirSeparador();
     }
     
     if (sistema.agenda == NULL) {
         printf("Você não tem agendamentos futuros.\n");
-        printf("======================================\n");
+        imprimirRodape();
         return;
     }
 
     NoAgendamento* atual = sistema.agenda;
     int encontrados = 0;
-    DataHora agora = obterDataHoraAtual();
+    
+    // Removido 'DataHora agora' pois não estava sendo usado nesta função
 
     while (atual != NULL) {
-        if (atual->idCliente == CLIENTE_LOGADO_ID) {
+        // ATUALIZAÇÃO: Filtra pelo ID do cliente logado
+        if (atual->idCliente == sistema.idClienteLogado) {
             // Verifica se o agendamento é futuro
             if (dataHoraFutura(atual->dia, atual->mes, atual->ano, atual->hora)) {
                 printf("\n📅 Agendamento ID: %d\n", atual->id);
@@ -494,7 +494,7 @@ void listarMeusAgendamentos() {
         printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
         printf("Total de agendamentos futuros: %d\n", encontrados);
     }
-    printf("======================================\n");
+    printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 }
 
 void sairDaFila() {
@@ -506,7 +506,8 @@ void sairDaFila() {
     NoFila* atual = sistema.filaInicio;
     NoFila* anterior = NULL;
 
-    while (atual != NULL && atual->idCliente != CLIENTE_LOGADO_ID) {
+    // ATUALIZAÇÃO: Busca o cliente logado na fila
+    while (atual != NULL && atual->idCliente != sistema.idClienteLogado) {
         anterior = atual;
         atual = atual->proximo;
     }
@@ -530,5 +531,5 @@ void sairDaFila() {
     }
 
     free(atual);
-    printf("\nVocê foi removido da fila de espera (ID Cliente: %d)!\n", CLIENTE_LOGADO_ID);
+    printf("\nVocê foi removido da fila de espera (ID Cliente: %d)!\n", sistema.idClienteLogado);
 }

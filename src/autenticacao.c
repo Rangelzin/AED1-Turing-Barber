@@ -41,9 +41,8 @@ int fazerLoginCliente() {
     char senha[20];
     
     limparTela();
-    printf("======================================\n");
-    printf("         LOGIN DO CLIENTE             \n");
-    printf("======================================\n");
+    imprimirCabecalho("LOGIN DO CLIENTE");
+    // Removi as bordas manuais antigas
     
     printf("Telefone: ");
     scanf(" %19[^\n]", telefone); 
@@ -52,6 +51,9 @@ int fazerLoginCliente() {
     printf("Senha: ");
     scanf(" %19[^\n]", senha);
     limparBufferInput();
+
+    // Fecha visualmente a seção de inputs
+    imprimirSeparador(); 
 
     NoCliente* cliente = buscarClientePorCredenciais(telefone, senha);
 
@@ -72,9 +74,7 @@ int fazerLoginBarbeiro() {
     char senha[20];
 
     limparTela();
-    printf("======================================\n");
-    printf("         LOGIN DO BARBEIRO            \n");
-    printf("======================================\n");
+    imprimirCabecalho("LOGIN DO BARBEIRO");
     
     printf("Email: ");
     scanf(" %99[^\n]", email);
@@ -83,6 +83,8 @@ int fazerLoginBarbeiro() {
     printf("Senha: ");
     scanf(" %19[^\n]", senha);
     limparBufferInput();
+
+    imprimirSeparador();
 
     NoBarbeiro* barbeiro = buscarBarbeiroPorCredenciais(email, senha);
 
