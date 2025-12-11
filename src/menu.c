@@ -151,7 +151,7 @@ void exibirMenuPrincipal() {
 
         switch(opcao) {
             case 1:
-                // Tenta fazer o login. Se for bem-sucedido (retorna 1), exibe o menu admin
+                // Tenta fazer o login. Se for bem-sucedido (retorna 1), exibe o menu barbeiro/admin
                 if (fazerLoginBarbeiro()) {
                     exibirMenuBarbeiro(); 
                 }

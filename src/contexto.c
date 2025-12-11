@@ -188,7 +188,7 @@ void carregarDados() {
     // 2. CARREGAR BARBEIROS
     FILE* arquivoB = fopen(ARQUIVO_BARBEIROS, "rb");
     if (arquivoB != NULL) {
-        NoBarbeiro tempBarbeiro; // <- A VARIÁVEL TEMPORÁRIA AGORA É PARA BARBEIRO
+        NoBarbeiro tempBarbeiro;
         NoBarbeiro* ultimoB = NULL;
         size_t tamanhoNoBarbeiro = sizeof(NoBarbeiro) - sizeof(NoBarbeiro*);
 
@@ -232,7 +232,6 @@ void carregarDados() {
                 printf("Erro de alocação de memória ao carregar agendamentos.\n"); break;
             }
             
-            // Copia os dados do agendamento (id, idCliente, idBarbeiro, dia, mes, ano, hora)
             memcpy(novoNo, &tempAgendamento, tamanhoNoAgendamento);
             novoNo->proximo = NULL; 
 

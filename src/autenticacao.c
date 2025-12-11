@@ -9,14 +9,10 @@
 //                          FUNÇÕES AUXILIARES DE BUSCA
 // ============================================================================
 
-/**
- * Busca um cliente na lista encadeada usando telefone e senha.
- * Retorna o ponteiro para o NoCliente se encontrado, ou NULL.
- */
+
 static NoCliente* buscarClientePorCredenciais(char* telefone, char* senha) {
     NoCliente* temp = sistema.listaClientes;
     while (temp != NULL) {
-        // Usa strcmp para comparar strings (case-sensitive)
         if (strcmp(temp->telefone, telefone) == 0 && strcmp(temp->senha, senha) == 0) {
             return temp; 
         }
@@ -25,14 +21,9 @@ static NoCliente* buscarClientePorCredenciais(char* telefone, char* senha) {
     return NULL; 
 }
 
-/**
- * Busca um barbeiro na lista encadeada usando email e senha.
- * Retorna o ponteiro para o NoBarbeiro se encontrado, ou NULL.
- */
 static NoBarbeiro* buscarBarbeiroPorCredenciais(char* email, char* senha) {
     NoBarbeiro* temp = sistema.listaBarbeiros;
     while (temp != NULL) {
-        // Usa strcmp para comparar strings (case-sensitive)
         if (strcmp(temp->email, email) == 0 && strcmp(temp->senha, senha) == 0) {
             return temp; 
         }
