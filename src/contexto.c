@@ -5,11 +5,18 @@
 #include <stdio.h>
 #include "estruturas.h"
 #include <string.h>
+#include <sys/stat.h>
 
-#define ARQUIVO_CLIENTES "clientes.dat"
-#define ARQUIVO_BARBEIROS "barbeiros.dat"
-#define ARQUIVO_AGENDAMENTOS "agendamentos.dat"
-#define ARQUIVO_FILA "fila.dat"
+#define ARQUIVO_CLIENTES "data/lientes.dat"
+#define ARQUIVO_BARBEIROS "data/barbeiros.dat"
+#define ARQUIVO_AGENDAMENTOS "data/agendamentos.dat"
+#define ARQUIVO_FILA "data/fila.dat"
+
+int diretorioExiste(const char *path) {
+    struct stat info;
+    if (stat(path, &info) != 0) return 0; // Não existe
+    return (info.st_mode & S_IFDIR);      // Existe e é diretório
+}
 
 ContextoSistema sistema;
 
@@ -30,6 +37,14 @@ void inicializarSistema() {
 
     sistema.idClienteLogado =0;
     sistema.idBarbeiroLogado =0;
+
+    if (!diretorioExiste("data")) {
+        #ifdef _WIN32
+            system("mkdir data");
+        #else
+            system("mkdir -p data");
+        #endif
+    }
 }
 
 NoBarbeiro* buscarBarbeiroPorId(int id) {
